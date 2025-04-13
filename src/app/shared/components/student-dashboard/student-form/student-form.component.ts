@@ -14,6 +14,7 @@ export class StudentFormComponent implements OnInit {
   @ViewChild('StudentForm') StudentForm !: NgForm
 
   newStudentArray !:Array<IStudent> 
+  studentId !:string
 
   constructor(
     private _studentService : StudentService,
@@ -21,6 +22,13 @@ export class StudentFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._studentService.studentData$.subscribe(res => {
+      if(res){
+        console.log(res);
+        
+        this.StudentForm.form.patchValue(res)
+      }
+    })
   }
 
   onSubmit(){
@@ -28,8 +36,20 @@ export class StudentFormComponent implements OnInit {
       let newStudent :IStudent = this.StudentForm.value;
       newStudent.id = this._uuidService.generateUuid()
       this._studentService.newStudentObj(newStudent);
+      console.log(newStudent);
+      this.studentId = newStudent.id
       this.StudentForm.reset()
 
     }
   }
+  onUpdate(){
+    if(this.StudentForm.valid){
+      let updatedStudent :IStudent = this.StudentForm.value;
+      updatedStudent.id = this.studentId
+      this._studentService.updatedStudentObj(updatedStudent);
+      console.log(updatedStudent);
+      
+      this.StudentForm.reset()
+  }
+}
 }

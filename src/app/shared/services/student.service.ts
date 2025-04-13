@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IStudent } from '../model/student';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,13 @@ export class StudentService {
     },
   ]
 
+  private student = new BehaviorSubject<any>(null)
+  studentData$ = this.student.asObservable()
   constructor() { }
+  
+  patchValue(std:any){
+    this.student.next(std)
+  }
 
   fetchAllStudent(){
     return this.studentArray
@@ -31,4 +38,8 @@ export class StudentService {
     this.studentArray.splice(getIndex, 1)
   }
 
+  updatedStudentObj(std:IStudent){
+    let getIndex = this.studentArray.findIndex(f => f.id === std.id);
+    this.studentArray[getIndex]=std
+  }
 }

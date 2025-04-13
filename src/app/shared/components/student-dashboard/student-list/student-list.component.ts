@@ -20,4 +20,8 @@ export class StudentListComponent implements OnInit {
     this._studentService.onRemoveStd(std)
   }
 
+  onEdit(std :IStudent){
+    this._studentService.patchValue(std)
+  }
+
 }
